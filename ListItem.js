@@ -13,7 +13,6 @@ import EventShow from './EventShow';
 
 export default class ListItem extends React.PureComponent {
   _onPress = () => {
-    console.log(this.props.event.name)
     // this.props.onPressItem(this.props.index);
     this.props.navigator.push({
       title: 'Results',
@@ -24,44 +23,54 @@ export default class ListItem extends React.PureComponent {
 
   render() {
     const event = this.props.event
+    // console.log(this.props.navigator)
     return (
-      <TouchableHighlight
-        onPress={this._onPress}
-        underlayColor='#dddddd'>
-        <View>
-          <View style={styles.rowContainer}>
-            <Text style={styles.price}>{event.name} @ {event.owner}</Text>
+      <View>
+        <TouchableHighlight
+          onPress={this._onPress}
+          underlayColor='#dddddd'>
+          <View style={styles.container}>
+            <View style={styles.rowContainer}>
+              <Text style={styles.price}>{event.name} @ {event.owner}</Text>
+            </View>
+            <Text style={styles.descriptionText}>{event.description}</Text>
           </View>
-          <Text style={styles.descriptionText}>{event.description}</Text>
-          <View style={styles.separator}/>
-        </View>
-      </TouchableHighlight>
+        </TouchableHighlight>
+        <View style={styles.separator}/>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+    borderWidth: 1,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.8,
+    // shadowRadius: 2,
+  },
   textContainer: {
     flex: 1
   },
   separator: {
-    height: 1,
-    backgroundColor: '#dddddd'
+    height: 5,
+    backgroundColor: '#F0DBDB',
   },
   price: {
     fontSize: 25,
     fontWeight: 'bold',
-    color: '#48BBEC'
+    color: '#48BBEC',
   },
   descriptionText: {
-    fontSize: 10
+    fontSize: 10,
+
   },
   title: {
     fontSize: 20,
-    color: '#656565'
+    color: '#656565',
   },
   rowContainer: {
-    flexDirection: 'row',
-    // padding: 10
   },
 });

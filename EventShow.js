@@ -6,7 +6,8 @@ import {
   TouchableHighlight,
   FlatList,
   Text,
-  NavigatorIOS
+  NavigatorIOS,
+  ScrollView
 } from 'react-native';
 
 export default class EventShow extends React.PureComponent {
@@ -14,19 +15,23 @@ export default class EventShow extends React.PureComponent {
   render() {
     const event = this.props.event
     return (
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>show this tsitnrg palea</Text>
-      </View>
+      <ScrollView style={styles.textContainer}>
+        <Text style={styles.title}>{event.name} @ {event.owner}</Text>
+        <Text style={styles.description}>{event.description}</Text>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   textContainer: {
-    backgroundColor: '#48BBEC'
+    flex: 1,
   },
   title: {
-    fontSize: 100,
-    color: '#48BBEC'
+    fontSize: 30,
+    textAlign: 'center'
+  },
+  description: {
+    fontSize: 20
   }
 });

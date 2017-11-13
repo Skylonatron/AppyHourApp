@@ -11,9 +11,11 @@ import {
   FlatList,
   List,
   Image,
+  Dimensions,
 } from 'react-native';
 
 import SearchResults from './SearchResults';
+// import DayButton from './DayButton';
 
 
 
@@ -56,17 +58,32 @@ function daysOfWeek() {
   return arr
 }
 
+function getDayOfWeek() {
+  var d = new Date();
+  const n = d.getDay();
+
+  return n
+}
+
 
 export default class SearchPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
      searchString: 'london',
-     isLoading: false,
+     isLoading: true,
      message: '',
-     data: ''
+     data: '',
+     highlightDay: getDayOfWeek() 
+     // data: this._executeQuery(urlForQueryAndPage('http://localhost:3000/events_today', 1))
     };
   }
+
+  // loading data initially
+  componentWillMount() {
+    const query = urlForQueryAndPage('http://localhost:3000/events_today', getDayOfWeek());
+    this._executeQuery(query);
+  };
 
   _onSearchTextChanged = (event) => {
     this.setState({ searchString: event.nativeEvent.text });
@@ -105,48 +122,45 @@ export default class SearchPage extends Component {
 
   _changeDay = (day) => {
     const query = urlForQueryAndPage('http://localhost:3000/events_today', day);
+    this.setState({highlightDay: day});
     this._executeQuery(query);
-
   };
 
   _onSearchPressed = () => {
     const query = urlForQueryAndPage('http://localhost:3000/events_today', this.state.searchString);
-    this._executeQuery(query);
+    console.log(this._executeQuery(query));
   };
 
   render() {
+    const screenWidth = Dimensions.get('window').width;
     const spinner = this.state.isLoading ? <ActivityIndicator size='large'/> : null;
     const days_buttons = daysOfWeek().map((day) => {
-      return <Button title={day.title} value="legolas" onPress={ () => this._changeDay(day.number)}/>
-    })
+      return <Button 
+        title={day.title} 
+        backgroundColor="#000000"
+        width={screenWidth / 7}
+        color={day.number == this.state.highlightDay ? "#008080" : "#ffffff"}
+        onPress={ () => this._changeDay(day.number)}
+      />;
+    });
     return (
       <View style={styles.container}>
 
-        <View style={styles.flowRight}>
+        <View style={styles.dayButtons}>
           {days_buttons}
         </View>
 
-        <View style={styles.flowRight}>
-          <TextInput
-            style={styles.searchInput}
-            value={this.state.searchString}
-            onChange={this._onSearchTextChanged}
-            placeholder='Search via name or postcode'/>
-          <Button
-            onPress={this._onSearchPressed}
-            color='#48BBEC'
-            title='Go'
-          />
-        </View>
         {spinner}
 
-        <Text style={styles.description}>{this.state.message}</Text>
+        <View style={styles.listings}>
+          <Text style={styles.description}>{this.state.message}</Text>
 
-        <SearchResults 
-          title={'title'}
-          listings={this.state.data}
-          navigator={this.props.navigator}
-        />
+          <SearchResults 
+            title={'title'}
+            listings={this.state.data}
+            navigator={this.props.navigator}
+          />
+        </View>
 
       </View>
     );
@@ -155,22 +169,28 @@ export default class SearchPage extends Component {
 
 const styles = StyleSheet.create({
   description: {
-    marginBottom: 20,
     fontSize: 18,
     textAlign: 'center',
     color: '#656565'
   },
 
   container: {
-    padding: 30,
+    // padding: 30,
     marginTop: 65,
-    alignItems: 'center'
+    alignItems: 'center',
+    flex: 1,
+    backgroundColor: '#F0DBDB'
   },
-
+  listings: {
+    backgroundColor: '#F0DBDB'
+  },
   buttons: {
     fontSize: 100,
   },
-
+  dayButtons: {
+    flexDirection: 'row',
+    backgroundColor: '#000000'
+  },
   flowRight: {
     flexDirection: 'row',
     alignItems: 'center',

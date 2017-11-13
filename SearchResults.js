@@ -42,7 +42,7 @@ export default class SearchResults extends Component {
       //   keyExtractor={this._keyExtractor}
       //   renderItem={this._renderItem}
       // />
-      <View>{events}</View>
+      <View style={styles.container}>{events}</View>
       
     );
   }
@@ -54,24 +54,7 @@ const styles = StyleSheet.create({
     height: 80,
     marginRight: 10
   },
-  textContainer: {
-    flex: 1
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#dddddd'
-  },
-  price: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: '#48BBEC'
-  },
-  title: {
-    fontSize: 20,
-    color: '#656565'
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    padding: 10
-  },
+  container: {
+    backgroundColor: '#ffffff'
+  }
 });

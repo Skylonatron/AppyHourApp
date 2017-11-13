@@ -35,6 +35,7 @@ class PropertyFinder extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#F0DBDB'
   },
 
 });
