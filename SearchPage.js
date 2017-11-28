@@ -12,12 +12,16 @@ import {
   List,
   Image,
   Dimensions,
+  ScrollView
 } from 'react-native';
 
 import SearchResults from './SearchResults';
 // import DayButton from './DayButton';
 
-
+function url() {
+  // return 'http://www.appyhr.io/events_today';
+  return 'http://192.168.0.10:3000/api/events_today'
+}
 
 function urlForQueryAndPage(url, day) {
   // const data = {
@@ -81,7 +85,7 @@ export default class SearchPage extends Component {
 
   // loading data initially
   componentWillMount() {
-    const query = urlForQueryAndPage('http://localhost:3000/events_today', getDayOfWeek());
+    const query = urlForQueryAndPage(url(), getDayOfWeek());
     this._executeQuery(query);
   };
 
@@ -109,7 +113,7 @@ export default class SearchPage extends Component {
 
   _executeQuery = (query) => {
     // console.log(query);
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, data: ''});
     fetch(query, { method: 'GET' })
       .then(response => response.json())
       .then(json => this._handleResponse(json))
@@ -121,21 +125,24 @@ export default class SearchPage extends Component {
   };
 
   _changeDay = (day) => {
-    const query = urlForQueryAndPage('http://localhost:3000/events_today', day);
+    const query = urlForQueryAndPage(url(), day);
     this.setState({highlightDay: day});
     this._executeQuery(query);
   };
 
   _onSearchPressed = () => {
-    const query = urlForQueryAndPage('http://localhost:3000/events_today', this.state.searchString);
+    const query = urlForQueryAndPage(url(), this.state.searchString);
     console.log(this._executeQuery(query));
   };
 
-  render() {
+  render() {    
     const screenWidth = Dimensions.get('window').width;
-    const spinner = this.state.isLoading ? <ActivityIndicator size='large'/> : null;
-    const days_buttons = daysOfWeek().map((day) => {
+    const screenHeight = Dimensions.get('window').height;
+    const spinner = this.state.isLoading ? <ActivityIndicator style={styles.loading} size='large'/> : null;
+    const warningMessage = this.state.message ? <Text style={styles.description}>{this.state.message}</Text> : null
+    const days_buttons = daysOfWeek().map((day, index) => {
       return <Button 
+        key={index}
         title={day.title} 
         backgroundColor="#000000"
         width={screenWidth / 7}
@@ -151,16 +158,16 @@ export default class SearchPage extends Component {
         </View>
 
         {spinner}
+        {warningMessage}
 
-        <View style={styles.listings}>
-          <Text style={styles.description}>{this.state.message}</Text>
+        <ScrollView contentContainerStyle={styles.listings} automaticallyAdjustContentInsets={false}>
 
           <SearchResults 
             title={'title'}
             listings={this.state.data}
             navigator={this.props.navigator}
           />
-        </View>
+        </ScrollView>
 
       </View>
     );
@@ -176,20 +183,22 @@ const styles = StyleSheet.create({
 
   container: {
     // padding: 30,
-    marginTop: 65,
-    alignItems: 'center',
+    paddingTop: 65,
+    // alignItems: 'center',
     flex: 1,
     backgroundColor: '#F0DBDB'
   },
   listings: {
-    backgroundColor: '#F0DBDB'
+    backgroundColor: '#F0DBDB',
+    flex: 1,
+    paddingTop: 10
   },
   buttons: {
     fontSize: 100,
   },
   dayButtons: {
     flexDirection: 'row',
-    backgroundColor: '#000000'
+    backgroundColor: '#000000',
   },
   flowRight: {
     flexDirection: 'row',
@@ -197,7 +206,9 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'center',
   },
-
+  loading: {
+    marginTop: 30,
+  },
   searchInput: {
     height: 36,
     padding: 4,

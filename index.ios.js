@@ -17,16 +17,22 @@ import {
 } from 'react-native';
 
 import SearchPage from './SearchPage';
+import MyNavigation from './MyNavigation';
 
 class PropertyFinder extends Component {
   render() {
+    const navigation = <NavigatorIOS
+          style={styles.container}
+          initialRoute={{
+            title: 'Appy Hr',
+            component: SearchPage,
+          }}/>
     return (
-      <NavigatorIOS
-        style={styles.container}
-        initialRoute={{
-          title: 'Appy Hr',
-          component: SearchPage,
-        }}/>
+      <View style={styles.container}>
+          {navigation}
+          <MyNavigation navigator={navigation}/>
+        
+      </View>
     );
   }
 }

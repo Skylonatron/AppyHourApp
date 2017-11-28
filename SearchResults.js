@@ -31,15 +31,16 @@ export default class SearchResults extends Component {
   render() {
     const events = this.props.listings.length > 0 ? this.props.listings.map((event) => {
       return <ListItem
+        key={event.key}
         event={event}
         navigator={this.props.navigator}
       />
-    }) : <Text></Text>;
+    }) : null;
 
     return (
       // <FlatList
       //   data={this.props.listings}
-      //   keyExtractor={this._keyExtractor}
+      //   keyExtrator={this._keyExtractor}
       //   renderItem={this._renderItem}
       // />
       <View style={styles.container}>{events}</View>
